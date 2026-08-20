@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  db:
+    image: mongo:latest
+    container_name: gatekeeper-db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+  backend:
+    build: ./backend
+    container_name: gatekeeper-backend
+    ports:
+      - "5001:5001"
+    environment:
+      - PORT=5001
+      - MONGO_URI=mongodb://db:27017/visitor-pass-db
+      - JWT_SECRET=ye_mera_super_secret_jwt_key_hai_dosto_12345
+    depends_on:
+      - db
+  frontend:
+    build: ./frontend
+    container_name: gatekeeper-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+volumes:
+  mongo-data:
