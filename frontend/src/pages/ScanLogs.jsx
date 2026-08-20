@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_URL } from '../config';
 import { FileText, Search, Shield } from 'lucide-react';
 const ScanLogs = () => {
   const [logs, setLogs] = useState([]);
@@ -7,7 +8,7 @@ const ScanLogs = () => {
   const token = localStorage.getItem('token');
   const getLogsList = async () => {
     try {
-      const res = await fetch('http://localhost:5001/api/checklogs', {
+      const res = await fetch(`${API_URL}/checklogs`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await res.json();

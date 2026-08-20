@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_URL } from '../config';
 import { useNavigate, Link } from 'react-router-dom';
 import { User, Mail, Phone, Building, UserCheck, Calendar, Clock, BookOpen, CheckCircle, ShieldCheck } from 'lucide-react';
 const PreRegister = () => {
@@ -21,7 +22,7 @@ const PreRegister = () => {
     // hosts fetch kro dropdown fill krne ke liye
     const getHosts = async () => {
       try {
-        const res = await fetch('http://localhost:5001/api/auth/hosts?organization=Acme Corp');
+        const res = await fetch(`${API_URL}/auth/hosts?organization=Acme Corp`);
         const data = await res.json();
         if (data.success) setHosts(data.hosts);
       } catch (err) {
@@ -35,7 +36,7 @@ const PreRegister = () => {
     setError('');
     setMessage('');
     try {
-      const res = await fetch('http://localhost:5001/api/appointments/create', {
+      const res = await fetch(`${API_URL}/appointments/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ visitorName, visitorEmail, visitorPhone, visitorOrg, hostId, date, time, purpose, organization: 'Acme Corp' })
@@ -53,7 +54,7 @@ const PreRegister = () => {
     e.preventDefault();
     setError('');
     try {
-      const res = await fetch('http://localhost:5001/api/appointments/verify-otp', {
+      const res = await fetch(`${API_URL}/appointments/verify-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ appointmentId, otp: enteredOtp })

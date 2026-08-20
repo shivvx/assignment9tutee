@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { API_URL } from '../config';
 import { AuthContext } from '../context/AuthContext';
 import QrScanner from '../components/QrScanner';
 import { Users, LogIn, Clock, CalendarCheck, ShieldCheck, Download, Check, X, AlertTriangle } from 'lucide-react';
@@ -16,34 +17,34 @@ const Dashboard = () => {
     try {
       const headers = { 'Authorization': `Bearer ${token}` };
       // stats cards fetch
-      const statsRes = await fetch('http://localhost:5001/api/analytics/stats', { headers });
+      const statsRes = await fetch(`${API_URL}/analytics/stats`, { headers });
       const statsData = await statsRes.json();
       if (statsData.success) setStats(statsData.stats);
       // charts fetch
-      const chartsRes = await fetch('http://localhost:5001/api/analytics/charts', { headers });
+      const chartsRes = await fetch(`${API_URL}/analytics/charts`, { headers });
       const chartsData = await chartsRes.json();
       if (chartsData.success) setCharts(chartsData.charts);
       // check logs fetch for security and admin
       if (user.role === 'admin' || user.role === 'security') {
-        const logsRes = await fetch('http://localhost:5001/api/checklogs', { headers });
+        const logsRes = await fetch(`${API_URL}/checklogs`, { headers });
         const logsData = await logsRes.json();
         if (logsData.success) setRecentLogs(logsData.logs.slice(0, 5));
-        const activeRes = await fetch('http://localhost:5001/api/passes/active', { headers });
+        const activeRes = await fetch(`${API_URL}/passes/active`, { headers });
         const activeData = await activeRes.json();
         if (activeData.success) setActiveInside(activeData.passes);
       }
       // appointments fetch for host
       if (user.role === 'host') {
-        const appRes = await fetch('http://localhost:5001/api/appointments', { headers });
+        const appRes = await fetch(`${API_URL}/appointments`, { headers });
         const appData = await appRes.json();
         if (appData.success) setAppointments(appData.appointments.filter(a => a.status === 'pending'));
       }
       // passes fetch for visitor
       if (user.role === 'visitor') {
-        const passRes = await fetch('http://localhost:5001/api/passes', { headers });
+        const passRes = await fetch(`${API_URL}/passes`, { headers });
         const passData = await passRes.json();
         if (passData.success) setVisitorPasses(passData.passes);
-        const appRes = await fetch('http://localhost:5001/api/appointments', { headers });
+        const appRes = await fetch(`${API_URL}/appointments`, { headers });
         const appData = await appRes.json();
         if (appData.success) setAppointments(appData.appointments);
       }
@@ -58,7 +59,7 @@ const Dashboard = () => {
   const handleScanSuccess = async (passId) => {
     setScanMessage({ type: '', text: '' });
     try {
-      const res = await fetch('http://localhost:5001/api/checklogs/scan', {
+      const res = await fetch(`${API_URL}/checklogs/scan`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -77,7 +78,7 @@ const Dashboard = () => {
   // Host actions: approve/reject pre-registration
   const handleApprove = async (id, status) => {
     try {
-      const res = await fetch(`http://localhost:5001/api/appointments/${id}/status`, {
+      const res = await fetch(`${API_URL}/appointments/${id}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -166,7 +167,7 @@ const Dashboard = () => {
                         <p><strong>Host:</strong> {p.host ? p.host.name : 'N/A'}</p>
                         <p><strong>Valid Till:</strong> {new Date(p.validTo).toLocaleTimeString()}</p>
                       </div>
-                      <a href={`http://localhost:5001/api/passes/${p._id}/pdf`} className="pdf-download-button" target="_blank" rel="noreferrer">
+                      <a href={`${API_URL}/passes/${p._id}/pdf`} className="pdf-download-button" target="_blank" rel="noreferrer">
                         <Download size={14} style={{ marginRight: '6px' }} />
                         <span>Download PDF Badge</span>
                       </a>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_URL } from '../config';
 import { LogOut, Ticket, Search, Clock } from 'lucide-react';
 const ActivePasses = () => {
   const [passes, setPasses] = useState([]);
@@ -7,7 +8,7 @@ const ActivePasses = () => {
   const token = localStorage.getItem('token');
   const getActivePasses = async () => {
     try {
-      const res = await fetch('http://localhost:5001/api/passes/active', {
+      const res = await fetch(`${API_URL}/passes/active`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await res.json();
@@ -23,7 +24,7 @@ const ActivePasses = () => {
   }, []);
   const handleForceCheckout = async (passId) => {
     try {
-      const res = await fetch('http://localhost:5001/api/checklogs/scan', {
+      const res = await fetch(`${API_URL}/checklogs/scan`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { API_URL } from '../config';
 import { AuthContext } from '../context/AuthContext';
 import { UserPlus, User, Mail, Shield, ShieldCheck, Key, Phone, Building } from 'lucide-react';
 const RegisterStaff = () => {
@@ -15,7 +16,7 @@ const RegisterStaff = () => {
   const token = localStorage.getItem('token');
   const getStaffUsers = async () => {
     try {
-      const res = await fetch('http://localhost:5001/api/auth/hosts?organization=Acme Corp');
+      const res = await fetch(`${API_URL}/auth/hosts?organization=Acme Corp`);
       const data = await res.json();
       if (data.success) {
         setStaffList(data.hosts);

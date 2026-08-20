@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { API_URL } from '../config';
 import { Camera, RefreshCw, CheckCircle, Search, UserCheck, User, Mail, Phone, Building, BookOpen, Clock, Download } from 'lucide-react';
 import confetti from 'canvas-confetti';
 const IssuePass = () => {
@@ -26,13 +27,13 @@ const IssuePass = () => {
     try {
       const headers = { 'Authorization': `Bearer ${token}` };
       // approved appointments list get kro
-      const appRes = await fetch('http://localhost:5001/api/appointments', { headers });
+      const appRes = await fetch(`${API_URL}/appointments`, { headers });
       const appData = await appRes.json();
       if (appData.success) {
         setAppointments(appData.appointments.filter(a => a.status === 'approved'));
       }
       // hosts dropdown lists get kro
-      const hostRes = await fetch('http://localhost:5001/api/auth/hosts?organization=Acme Corp', { headers });
+      const hostRes = await fetch(`${API_URL}/auth/hosts?organization=Acme Corp`, { headers });
       const hostData = await hostRes.json();
       if (hostData.success) setHosts(hostData.hosts);
     } catch (err) {
@@ -138,7 +139,7 @@ const IssuePass = () => {
         validTo,
         organization: 'Acme Corp'
       };
-      const res = await fetch('http://localhost:5001/api/passes/issue', {
+      const res = await fetch(`${API_URL}/passes/issue`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -194,7 +195,7 @@ const IssuePass = () => {
             </div>
           </div>
           <div className="badge-action-footer">
-            <a href={`http://localhost:5001/api/passes/${issuedPass._id}/pdf`} className="pdf-download-button" target="_blank" rel="noreferrer">
+            <a href={`${API_URL}/passes/${issuedPass._id}/pdf`} className="pdf-download-button" target="_blank" rel="noreferrer">
               <Download size={16} style={{ marginRight: '6px' }} />
               <span>Download Printable PDF Badge</span>
             </a>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { API_URL } from '../config';
 import { AuthContext } from '../context/AuthContext';
 import { Calendar, Check, X, Building, BookOpen, Clock, User } from 'lucide-react';
 const Appointments = () => {
@@ -8,7 +9,7 @@ const Appointments = () => {
   const token = localStorage.getItem('token');
   const fetchAppointments = async () => {
     try {
-      const res = await fetch('http://localhost:5001/api/appointments', {
+      const res = await fetch(`${API_URL}/appointments`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await res.json();
@@ -24,7 +25,7 @@ const Appointments = () => {
   }, []);
   const handleStatusChange = async (id, status) => {
     try {
-      const res = await fetch(`http://localhost:5001/api/appointments/${id}/status`, {
+      const res = await fetch(`${API_URL}/appointments/${id}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
